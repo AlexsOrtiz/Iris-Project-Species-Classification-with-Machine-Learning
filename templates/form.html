@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iris Flower Classifier</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+    <div id="loading-screen">
+        <div class="loading-content">
+            <img src="{{ url_for('static', filename='images/imagen1.png') }}" alt="Loading Image" class="loading-image">
+            <h2 class="loading-title">Iris Flower Classifier</h2>
+            <p class="developer-text">Developed by Alexsandra Ortiz</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <header class="animate__animated animate__fadeIn">
+            <h1>Iris Flower Classifier</h1>
+            <p class="subtitle">Discover the beauty of Iris flowers through machine learning</p>
+        </header>
+
+        <main>
+            
+            <div class="form-container animate__animated animate__fadeInUp">
+                <div class="flower-gallery">
+                    <div class="flower-species" data-species="setosa">
+                        <h3>Iris Setosa</h3>
+                        <div class="flower-image">
+                            <img src="{{ url_for('static', filename='images/setosa.png') }}" alt="Iris Setosa">
+                        </div>
+                    </div>
+                    <div class="flower-species" data-species="versicolor">
+                        <h3>Iris Versicolor</h3>
+                        <div class="flower-image">
+                            <img src="{{ url_for('static', filename='images/versicolor.png') }}" alt="Iris Versicolor">
+                        </div>
+                    </div>
+                    <div class="flower-species" data-species="virginica">
+                        <h3>Iris Virginica</h3>
+                        <div class="flower-image">
+                            <img src="{{ url_for('static', filename='images/virginica.png') }}" alt="Iris Virginica">
+                        </div>
+                    </div>
+                </div>
+
+                <form method="POST" id="prediction-form">
+                    <div class="input-group">
+                        <label for="sepal_length">Sepal Length (cm)</label>
+                        <input type="number" step="0.1" id="sepal_length" name="sepal_length" required>
+                        <div class="measurement-guide">Typical range: 4.3 - 7.9 cm</div>
+                    </div>
+                    <div class="input-group">
+                        <label for="sepal_width">Sepal Width (cm)</label>
+                        <input type="number" step="0.1" id="sepal_width" name="sepal_width" required>
+                        <div class="measurement-guide">Typical range: 2.0 - 4.4 cm</div>
+                    </div>
+                    <div class="input-group">
+                        <label for="petal_length">Petal Length (cm)</label>
+                        <input type="number" step="0.1" id="petal_length" name="petal_length" required>
+                        <div class="measurement-guide">Typical range: 1.0 - 6.9 cm</div>
+                    </div>
+                    <div class="input-group">
+                        <label for="petal_width">Petal Width (cm)</label>
+                        <input type="number" step="0.1" id="petal_width" name="petal_width" required>
+                        <div class="measurement-guide">Typical range: 0.1 - 2.5 cm</div>
+                    </div>
+                    <button type="submit" class="submit-btn">
+                        <span class="btn-text">Predict Species</span>
+                        <div class="btn-loader"></div>
+                    </button>
+                </form>
+            </div>
+
+            {% if result %}
+                {% if result.error %}
+                    <div class="error-message animate__animated animate__shakeX">
+                        {{ result.error }}
+                    </div>
+                {% else %}
+                    <div class="results-container animate__animated animate__fadeIn">
+                        <div class="result-card">
+                            <h3>Logistic Regression</h3>
+                            <div class="prediction">
+                                <div class="species-image">
+                                    <img src="{{ url_for('static', filename='images/' + result.logistic.label.lower() + '.png') }}" 
+                                         alt="{{ result.logistic.label }}">
+                                </div>
+                                <span class="species">{{ result.logistic.label }}</span>
+                                <div class="confidence-bar">
+                                    <div class="confidence-fill" {{ 'style="width: {}"'.format(result.logistic.confidence)|safe }}></div>
+                                </div>
+                                <span class="confidence">Confidence: {{ result.logistic.confidence }}</span>
+                            </div>
+                        </div>
+                        <div class="result-card">
+                            <h3>K-Nearest Neighbors</h3>
+                            <div class="prediction">
+                                <div class="species-image">
+                                    <img src="{{ url_for('static', filename='images/' + result.knn.label.lower() + '.png') }}" 
+                                         alt="{{ result.knn.label }}">
+                                </div>
+                                <span class="species">{{ result.knn.label }}</span>
+                                <div class="confidence-bar">
+                                    <div class="confidence-fill" {{ 'style="width: {}"'.format(result.knn.confidence)|safe }}></div>
+                                </div>
+                                <span class="confidence">Confidence: {{ result.knn.confidence }}</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </main>
+
+        <footer class="animate__animated animate__fadeIn">
+            <p>Built with Flask and scikit-learn | Explore the beauty of Iris flowers</p>
+        </footer>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html> 
